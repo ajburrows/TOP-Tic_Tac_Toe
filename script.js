@@ -8,7 +8,7 @@ const Gameboard = (function () {
     for(let i = 0; i < 9; i++){
         let curChild = gridContainer.children[i];
         curChild.addEventListener("click", function(){
-            GameController.requestMove(Math.floor(i / 3), (i % 3));
+            GameController.takeTurn(Math.floor(i / 3), (i % 3));
         });
     }
 
@@ -37,6 +37,7 @@ const Gameboard = (function () {
         }
     }
 
+    // return true if a win was found and false otherwise.
     function checkWin(row, col, token) {
         // check row
         if (board[row][0] == token && board[row][1] == token && board[row][2] == token){
@@ -47,11 +48,11 @@ const Gameboard = (function () {
             return true;
         }
         // check diagonal top-left to bot-right
-        if ((row == col) && (board[0][0] == token && board[1][1] == token && board[2][2] == token)) {
+        if (board[0][0] == token && board[1][1] == token && board[2][2] == token) {
             return true;
         }
         // check diagonal top-right to bot-left
-        if ((row + col == 2) && (board[0][2] == token && board[1][1] == token && board[0][2] == token)){
+        if (board[0][2] == token && board[1][1] == token && board[2][0] == token){
             return true
         }
         return false;
@@ -82,33 +83,42 @@ let GameController = (function () {
         }
     }
 
-    function requestMove(row, col){
-        // if game is active, placeToken, check win, return true
-        if (gameOver == false){
-                return [row, col];
-        }
-        return false;
-    }
 
     const player1 = createPlayer("player1", "X");
     const player2 = createPlayer("player2", "O");
     let activePlayer = player1;
+    let gameActive = false;
 
-    function playGame(){
+    function setupGame(){
         Gameboard.resetBoard(); // TODO: check that this function resets the values in the html grid squares
-
         Gameboard.printBoard();
-        let gameOver = false;
-
-        Gameboard.placeToken(row, col, activePlayer.getToken());
-
-        gameOver = Gameboard.checkWin(row, col, activePlayer.getToken());
-        Gameboard.printBoard();
-        switchPlayer();
-        console.log("winner: " + activePlayer.getName());
+        gameActive = true;
+        activePlayer = player1;
     }
 
-    return {playGame, requestMove};
+    function takeTurn(row, col){
+        if (gameActive == false){
+                return false;
+        }
+
+        let validMove = Gameboard.placeToken(row, col, activePlayer.getToken());
+        Gameboard.printBoard();
+        if (validMove == false){
+            console.log("Square already taken");
+        }
+        else{
+            let winFound = Gameboard.checkWin(row, col, activePlayer.getToken());
+            if (winFound == true){
+                gameActive = false;
+                console.log(activePlayer.getName() + " Wins!!!");
+            }
+            else{
+                switchPlayer();
+            }
+        }
+    }
+
+    return {setupGame, takeTurn};
 })();
 
 function sleep(ms) {
@@ -119,5 +129,5 @@ function sleep(ms) {
 
 const playGameBtn = document.getElementById("play-game-btn");
 playGameBtn.addEventListener("click", function(){
-    GameController.playGame(); 
+    GameController.setupGame(); 
 }); 
