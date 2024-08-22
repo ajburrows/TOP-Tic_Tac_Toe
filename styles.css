@@ -1,0 +1,45 @@
+body{
+    display: grid;
+    grid-template-rows: repeat(5, 1fr);
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    grid-area: 2 / 1 / 4 / 1;
+
+    /* Adjust the gap between grid items */
+    width: 300px;
+    height: calc(300px - 2px);
+
+    justify-self: center;
+    align-self: center;
+
+    background-color: black;
+    border: solid black 2px;
+}
+
+.grid-item {
+    display: flex;
+    
+    border: solid white 1px;
+    background-color: white;
+
+    justify-content: center;
+    align-items: center;
+    
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#play-game-btn {
+    align-self: center;
+    justify-self: center;
+
+    width: 300px;
+    height: 80px;
+
+    grid-row-start: 4;
+}
