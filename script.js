@@ -107,7 +107,5 @@ function sleep(ms) {
 
 const playGameBtn = document.getElementById("play-game-btn");
 playGameBtn.addEventListener("click", function(){
-    GameController.playGame(); // testing commit
+    GameController.playGame(); 
 });
-
-// testing save
