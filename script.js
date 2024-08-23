@@ -186,8 +186,11 @@ let GameController = (function () {
         }
 
         console.log("B");
-        showPlayerInfoPopup(0);
+        // The code does not wait for the first popup to be filled out before creating and displaying the second. This means that when the user clicks "Play Game", the first popup is
+        // created, and immediately after the popup from the second call to ShowPlayerInfoPopup() is displayed ontop of it. This means the first popup that the user fills out
+        // is actually the popup from the second call to ShowPlayerInfoPopup(). That is why the first call passes in index 1 and the second passes in index 0.
         showPlayerInfoPopup(1);
+        showPlayerInfoPopup(0);
     }
 
     console.log("A");
@@ -227,7 +230,7 @@ let GameController = (function () {
         }
     }
 
-    return {setupGame, takeTurn, setPlayerInfo, getPlayers};
+    return {setupGame, takeTurn, setPlayerInfo, getPlayers, player1, player2};
 })();
 
 function sleep(ms) {
