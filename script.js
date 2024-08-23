@@ -64,15 +64,16 @@ const Gameboard = (function () {
 
 let GameController = (function () {
 
-    function createPlayer(name, value){
-        const getName = () => {
-            return name;
-        }
-        const getToken = () => {
-            return value;
-        }
+    function createPlayer(name, token){
+        let playerName = name;
+        let playerToken = token;
 
-        return {getName, getToken};
+        const getName = () => { return playerName; }
+        const getToken = () => { return playerToken; }
+        const setName = (newName) => playerName = newName;
+        const setToken = (newToken) => playerToken = newToken;
+
+        return {getName, getToken, setName, setToken};
     }
 
     function switchPlayer(){
@@ -122,9 +123,13 @@ let GameController = (function () {
         document.body.appendChild(popup);
     }
 
-    // Sets up Name and token for both players
     function getPlayers(){
-        function showPlayerInfoPopup(player){
+        return [player1, player2];
+    }
+
+    // Sets up Name and token for both players
+    function setPlayerInfo(){
+        function showPlayerInfoPopup(playerIndex){
             // Create a div element for the popup
             const popup = document.createElement('div');
             popup.style.position = 'fixed';
@@ -165,9 +170,8 @@ let GameController = (function () {
             submitButton.addEventListener('click', () => {
                 const playerName = input1.value;
                 const playerToken = input2.value;
-                console.log(player);
-                player = createPlayer(playerName, playerToken);
-                // Remove the popup after submission
+                GameController.getPlayers()[playerIndex].setName(playerName);
+                GameController.getPlayers()[playerIndex].setToken(playerToken);
                 document.body.removeChild(popup);
             });
 
@@ -182,8 +186,8 @@ let GameController = (function () {
         }
 
         console.log("B");
-        showPlayerInfoPopup(GameController.player1);
-        showPlayerInfoPopup(GameController.player2);
+        showPlayerInfoPopup(0);
+        showPlayerInfoPopup(1);
     }
 
     console.log("A");
@@ -223,7 +227,7 @@ let GameController = (function () {
         }
     }
 
-    return {setupGame, takeTurn, getPlayers};
+    return {setupGame, takeTurn, setPlayerInfo, getPlayers};
 })();
 
 function sleep(ms) {
@@ -234,6 +238,6 @@ function sleep(ms) {
 
 const playGameBtn = document.getElementById("play-game-btn");
 playGameBtn.addEventListener("click", function(){
-    GameController.getPlayers();
+    GameController.setPlayerInfo();
     GameController.setupGame(); 
 }); 
