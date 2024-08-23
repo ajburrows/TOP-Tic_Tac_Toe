@@ -122,14 +122,79 @@ let GameController = (function () {
         document.body.appendChild(popup);
     }
 
+    // Sets up Name and token for both players
+    function getPlayers(){
+        function showPlayerInfoPopup(player){
+            // Create a div element for the popup
+            const popup = document.createElement('div');
+            popup.style.position = 'fixed';
+            popup.style.top = '50%';
+            popup.style.left = '50%';
+            popup.style.transform = 'translate(-50%, -50%)';
+            popup.style.padding = '20px';
+            popup.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            popup.style.color = 'white';
+            popup.style.fontSize = '16px';
+            popup.style.textAlign = 'center';
+            popup.style.borderRadius = '10px';
+            popup.style.zIndex = '1000'; // Ensure it appears above other content
 
-    const player1 = createPlayer("Player_1", "X");
-    const player2 = createPlayer("Player_2", "O");
+            // Create input elements
+            const input1 = document.createElement('input');
+            input1.type = 'text';
+            input1.placeholder = 'Enter Player Name';
+            input1.style.marginBottom = '10px';
+            input1.style.padding = '5px';
+            input1.style.width = '90%';
+
+            const input2 = document.createElement('input');
+            input2.type = 'text';
+            input2.placeholder = 'Enter Player Token';
+            input2.style.marginBottom = '10px';
+            input2.style.padding = '5px';
+            input2.style.width = '90%';
+
+            // Create a submit button
+            const submitButton = document.createElement('button');
+            submitButton.innerHTML = 'Submit';
+            submitButton.style.padding = '10px 20px';
+            submitButton.style.marginTop = '10px';
+            submitButton.style.cursor = 'pointer';
+
+            // Add an event listener to the submit button
+            submitButton.addEventListener('click', () => {
+                const playerName = input1.value;
+                const playerToken = input2.value;
+                console.log(player);
+                player = createPlayer(playerName, playerToken);
+                // Remove the popup after submission
+                document.body.removeChild(popup);
+            });
+
+
+            // Append inputs and button to the popup
+            popup.appendChild(input1);
+            popup.appendChild(input2);
+            popup.appendChild(submitButton);
+
+            // Append the popup to the body
+            document.body.appendChild(popup);
+        }
+
+        console.log("B");
+        showPlayerInfoPopup(GameController.player1);
+        showPlayerInfoPopup(GameController.player2);
+    }
+
+    console.log("A");
+    let player1 = createPlayer("Player_1", "X");
+    let player2 = createPlayer("Player_2", "O");
     let activePlayer = player1;
     let gameActive = false;
 
+
     function setupGame(){
-        Gameboard.resetBoard(); // TODO: check that this function resets the values in the html grid squares
+        Gameboard.resetBoard();
         Gameboard.printBoard();
         gameActive = true;
         activePlayer = player1;
@@ -158,7 +223,7 @@ let GameController = (function () {
         }
     }
 
-    return {setupGame, takeTurn};
+    return {setupGame, takeTurn, getPlayers};
 })();
 
 function sleep(ms) {
@@ -169,5 +234,6 @@ function sleep(ms) {
 
 const playGameBtn = document.getElementById("play-game-btn");
 playGameBtn.addEventListener("click", function(){
+    GameController.getPlayers();
     GameController.setupGame(); 
 }); 
