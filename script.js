@@ -83,9 +83,48 @@ let GameController = (function () {
         }
     }
 
+    function showWinnerPopup(winnerName){
+        // Create a div element for the popup
+        const popup = document.createElement('div');
+        popup.style.display = 'flex';
+        popup.style.flexDirection = 'column';
+        popup.style.position = 'fixed';
+        popup.style.top = '11%';
+        popup.style.left = '50%';
+        popup.style.transform = 'translate(-50%, -50%)';
+        popup.style.padding = '20px';
+        popup.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+        popup.style.color = 'white';
+        popup.style.fontSize = '24px';
+        popup.style.textAlign = 'center';
+        popup.style.borderRadius = '10px';
+        popup.style.zIndex = '1000'; // Ensure it appears above other content
+        popup.innerHTML = winnerName + ' Wins!!!';
 
-    const player1 = createPlayer("player1", "X");
-    const player2 = createPlayer("player2", "O");
+        // Create a button to close the popup
+        const closeButton = document.createElement('button');
+        closeButton.innerHTML = 'Play Again';
+        closeButton.style.marginTop = '10px';
+        closeButton.style.padding = '10px';
+        closeButton.style.fontSize = '16px';
+        closeButton.style.cursor = 'pointer';
+
+        // Add an event listener to the button to remove the popup
+        closeButton.addEventListener('click', () => {
+            document.body.removeChild(popup);
+            GameController.setupGame();
+        });
+
+        // Append the button to the popup
+        popup.appendChild(closeButton);
+
+        // Append the popup to the body
+        document.body.appendChild(popup);
+    }
+
+
+    const player1 = createPlayer("Player_1", "X");
+    const player2 = createPlayer("Player_2", "O");
     let activePlayer = player1;
     let gameActive = false;
 
@@ -111,6 +150,7 @@ let GameController = (function () {
             if (winFound == true){
                 gameActive = false;
                 console.log(activePlayer.getName() + " Wins!!!");
+                showWinnerPopup(activePlayer.getName());
             }
             else{
                 switchPlayer();
